@@ -5,7 +5,7 @@ interface Round {
     p1: string,
     p2: string
 }
-export const createCalculator = (input: string): RockPaperScissorsCalculator => {
+export const createCalculator = (input: string, strategy: number): RockPaperScissorsCalculator => {
     const parseRounds = (input: string): Round[] => {
         const rounds: string[] = input.split(/\n/)
         return rounds.map((roundStr) => {
@@ -47,7 +47,37 @@ export const createCalculator = (input: string): RockPaperScissorsCalculator => 
         return 0
     };
 
+    function chooseSelectedShape(round: Round): string {
+        if(round.p2 ==='Y'){
+            if(round.p1 ==='A')
+                return 'X'
+            if(round.p1 ==='B')
+                return 'Y'
+            if(round.p1 ==='C')
+                return 'Z'
+        }
+        else if(round.p2 ==='Z'){
+            if(round.p1 ==='A')
+                return 'Y'
+            if(round.p1 ==='B')
+                return 'Z'
+            if(round.p1 ==='C')
+                return 'X'
+        } else if(round.p2 ==='X'){
+            if(round.p1 ==='A')
+                return 'Z'
+            if(round.p1 ==='B')
+                return 'X'
+            if(round.p1 ==='C')
+                return 'Y'
+        }
+        return ''
+    }
+
     const getRoundScore = (round: Round): number => {
+        if(strategy === 2){
+            round.p2 = chooseSelectedShape(round)
+        }
         return selectedShapeScore(round.p2) + outcomeOfRoundScore(round)
     }
 
