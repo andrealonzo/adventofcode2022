@@ -1,9 +1,10 @@
-import {mostCaloriesThatAnElfIsCarrying, caloriesThatTheTopThreeElvesAreCarrying} from './calories'
+import {createElfCalorieCalculator} from './elfCalorieCalculator'
 
 test('most calories by elf by single elf', () => {
     const expectedCalories = 2000
     const calorieInput = "2000"
-    const actualCalories = mostCaloriesThatAnElfIsCarrying(calorieInput);
+    const elfCalculator = createElfCalorieCalculator(calorieInput)
+    const actualCalories = elfCalculator.mostCaloriesThatAnElfIsCarrying();
     expect(actualCalories).toBe(expectedCalories)
 })
 test('most calories by elf between two elves', () => {
@@ -12,7 +13,9 @@ test('most calories by elf between two elves', () => {
         "1000\n" +
         "\n" +
         "500"
-    const actualCalories = mostCaloriesThatAnElfIsCarrying(calorieInput);
+
+    const elfCalculator = createElfCalorieCalculator(calorieInput)
+    const actualCalories = elfCalculator.mostCaloriesThatAnElfIsCarrying();
     expect(actualCalories).toBe(expectedCalories)
 })
 
@@ -21,7 +24,9 @@ test('add calories by elf by single elf', () => {
     const calorieInput =
         "1000\n" +
         "500"
-    const actualCalories = mostCaloriesThatAnElfIsCarrying(calorieInput);
+
+    const elfCalculator = createElfCalorieCalculator(calorieInput)
+    const actualCalories = elfCalculator.mostCaloriesThatAnElfIsCarrying();
     expect(actualCalories).toBe(expectedCalories)
 })
 
@@ -41,7 +46,9 @@ test('sample day 1 advent of code input', () => {
         "9000\n" +
         "\n" +
         "10000"
-    const actualCalories = mostCaloriesThatAnElfIsCarrying(calorieInput);
+
+    const elfCalculator = createElfCalorieCalculator(calorieInput)
+    const actualCalories = elfCalculator.mostCaloriesThatAnElfIsCarrying();
     expect(actualCalories).toBe(expectedCalories)
 })
 
@@ -61,6 +68,8 @@ test('total calories of top 3 elves', () => {
         "9000\n" +
         "\n" +
         "10000"
-    const actualCalories = caloriesThatTheTopThreeElvesAreCarrying(calorieInput);
+
+    const elfCalculator = createElfCalorieCalculator(calorieInput)
+    const actualCalories = elfCalculator.caloriesThatTheTopThreeElvesAreCarrying();
     expect(actualCalories).toBe(expectedCalories)
 })

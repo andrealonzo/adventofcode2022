@@ -1,7 +1,8 @@
 import * as fs from 'fs';
-import {caloriesThatTheTopThreeElvesAreCarrying, mostCaloriesThatAnElfIsCarrying} from './calories'
+import {createElfCalorieCalculator} from './elfCalorieCalculator'
 const calorieInput = fs.readFileSync('input.txt','utf8');
-const mostCalories = mostCaloriesThatAnElfIsCarrying(calorieInput);
-const topThreeCalories = caloriesThatTheTopThreeElvesAreCarrying(calorieInput);
+const elfCalculator = createElfCalorieCalculator(calorieInput)
+const mostCalories = elfCalculator.mostCaloriesThatAnElfIsCarrying();
+const topThreeCalories = elfCalculator.caloriesThatTheTopThreeElvesAreCarrying();
 console.log("How many calories does the elf with the most calories have? " + mostCalories + "\n")
-console.log("How many calories do the top three elves have? " + topThreeCalories + "\n")
+console.log("How many calories do the top three elves have altogether? " + topThreeCalories + "\n")
