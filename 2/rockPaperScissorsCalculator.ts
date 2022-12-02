@@ -1,24 +1,21 @@
 interface RockPaperScissorsCalculator {
     calculateTotalScore: () => number
 }
-
 interface Round {
     p1: string,
     p2: string
 }
-
 export const createCalculator = (input: string): RockPaperScissorsCalculator => {
-
     const parseRounds = (input: string): Round[] => {
-
-        const roundArr = input.split(" ")
-
-        const round: Round = {
-            p1: roundArr[0],
-            p2: roundArr[1]
-        };
-
-        return [round]
+        const rounds: string[] = input.split(/\n/)
+        return rounds.map((roundStr) => {
+            const roundArr = roundStr.split(" ")
+            const round: Round = {
+                p1: roundArr[0],
+                p2: roundArr[1]
+            };
+            return round
+        })
     }
 
     const selectedShapeScore = (shape: string): number => {
@@ -54,11 +51,13 @@ export const createCalculator = (input: string): RockPaperScissorsCalculator => 
         return selectedShapeScore(round.p2) + outcomeOfRoundScore(round)
     }
 
+    const getTotalScore = (rounds: Round[]): number => {
+        return rounds.reduce((partialSum, round) => partialSum + getRoundScore(round), 0)
+    };
+
     const calculateTotalScore = (): number => {
         const rounds = parseRounds(input)
-        const round = rounds[0]
-        const totalScore = getRoundScore(round)
-        return totalScore
+        return getTotalScore(rounds)
     }
 
     return {
