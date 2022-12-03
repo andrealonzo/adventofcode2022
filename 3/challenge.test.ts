@@ -38,7 +38,7 @@ test('1 ruck sack group', () => {
         "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL\n" +
         "PmmdzqPrVvPwwTWBwg"
     const calculator = createCalculator(input)
-    const actual = calculator.cualculateGroup();
+    const actual = calculator.calculateGroup();
     expect(actual).toBe(expected)
 })
 
