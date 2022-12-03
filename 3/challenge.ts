@@ -1,5 +1,7 @@
 interface Challenge {
     calculate: () => number;
+
+    calculateGroup(): number;
 }
 
 export const createCalculator = (input: string): Challenge => {
@@ -39,14 +41,45 @@ export const createCalculator = (input: string): Challenge => {
         }
         return sumPriorities
     }
+    const rucksacks = parseRucksacksFromInput(input)
 
     const calculate = () => {
-        const rucksacks = parseRucksacksFromInput(input)
         return calculatePrioritiesOfCommonItems(rucksacks)
     };
 
+    function getCommonItemFromGroup(rucksackOne: string, rucksackTwo: string, rucksackThree: string) {
+        for(let i = 0; i < rucksackOne.length; i++){
+            for(let j = 0; j < rucksackTwo.length; j++){
+                if(rucksackOne[i] === rucksackTwo[j]){
+                    for(let k = 0;k<rucksackThree.length;k++){
+                        if(rucksackOne[i]===rucksackThree[k]){
+                            return rucksackThree[k]
+                        }
+                    }
+                }
+            }
+        }
+        return ""
+
+    }
+
+    function calculateGroupPriorities(rucksacks: string[]) {
+        let sumPriorities = 0
+        for (let i = 0; i < rucksacks.length; i+=3) {
+            const commonItem = getCommonItemFromGroup(rucksacks[i], rucksacks[i+1], rucksacks[i+2])
+            const priority = convertToPriority(commonItem)
+            sumPriorities += priority
+        }
+        return sumPriorities
+    }
+
+    const calculateGroup = ()=>{
+        return calculateGroupPriorities(rucksacks)
+    }
+
     return {
-        calculate
+        calculate,
+        calculateGroup
     }
 
 }
