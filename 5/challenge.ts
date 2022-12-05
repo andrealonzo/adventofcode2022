@@ -12,27 +12,24 @@ interface Input {
 export const createCalculator = (inputStr: string): any => {
 
     const parseInput = (inputStr: string): any => {
-        const input = {
+        return {
             moves: parseMoveInput(inputStr),
             stacks: parseStackInput(inputStr)
         }
-        return input
 
     }
 
     const parseMoveInput = (input: string): any => {
         const movesInput = input.split(/\n\n/)
         const movesStr = movesInput[1].split(/\n/)
-        const moves = movesStr.map((moveStr) => {
+        return movesStr.map((moveStr) => {
             const moveStrArr = moveStr.split(" ")
-            const move = {
+            return {
                 amount: parseInt(moveStrArr[1]),
                 from: parseInt(moveStrArr[3]),
                 to: parseInt(moveStrArr[5])
             }
-            return move
         })
-        return moves
     }
     const parseStackInput = (input: string): string[][] => {
         const stacksInput = input.split(/\n\n/)
@@ -49,7 +46,7 @@ export const createCalculator = (inputStr: string): any => {
         for (let i = 0; i < stacksStr.length; i++) {
             for (let j = 0; j < numStacks; j++) {
                 const char = stacksStr[i].charAt((j * 4) + 1)
-                if (char !== " ") {
+                if (char !== " " && char !=="") {
                     stacks[j].unshift(char)
                 }
             }
@@ -64,9 +61,9 @@ export const createCalculator = (inputStr: string): any => {
     const calculateAnswer1 = () => {
         const input:Input = parseInput(inputStr)
 
-        console.log("stacks before", input.stacks)
         input.moves.forEach((move)=>{
             console.log("move",move)
+            console.log("stacks before", input.stacks)
             for (let i = 0; i < move.amount; i++) {
                 const crateToMove = input.stacks[move.from-1].pop()
                 if(crateToMove){
@@ -74,12 +71,11 @@ export const createCalculator = (inputStr: string): any => {
                 }
 
             }
+            console.log("stacks after", input.stacks)
         })
 
-        console.log("stacks after", input.stacks)
 
-        const stackLetters = getStackLetters(input.stacks);
-        return stackLetters
+        return getStackLetters(input.stacks)
     };
 
 
