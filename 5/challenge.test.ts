@@ -115,3 +115,19 @@ test('move 2 to 1', () => {
     expect(actual).toStrictEqual(expected)
 })
 
+test('sample input 2', () => {
+    const expected = "MCD"
+    const input = "    [D]    \n" +
+        "[N] [C]    \n" +
+        "[Z] [M] [P]\n" +
+        " 1   2   3 \n" +
+        "\n" +
+        "move 1 from 2 to 1\n" +
+        "move 3 from 1 to 3\n" +
+        "move 2 from 2 to 1\n" +
+        "move 1 from 1 to 2"
+    const calculator = createCalculator(input)
+    const actual = calculator.calculateAnswer2(input);
+    expect(actual).toStrictEqual(expected)
+})
+

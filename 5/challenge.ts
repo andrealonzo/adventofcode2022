@@ -62,8 +62,6 @@ export const createCalculator = (inputStr: string): any => {
         const input:Input = parseInput(inputStr)
 
         input.moves.forEach((move)=>{
-            console.log("move",move)
-            console.log("stacks before", input.stacks)
             for (let i = 0; i < move.amount; i++) {
                 const crateToMove = input.stacks[move.from-1].pop()
                 if(crateToMove){
@@ -71,7 +69,6 @@ export const createCalculator = (inputStr: string): any => {
                 }
 
             }
-            console.log("stacks after", input.stacks)
         })
 
 
@@ -80,6 +77,20 @@ export const createCalculator = (inputStr: string): any => {
 
 
     const calculateAnswer2 = () => {
+        const input:Input = parseInput(inputStr)
+
+        input.moves.forEach((move)=>{
+            const cratesToMove = []
+            for (let i = 0; i < move.amount; i++) {
+                const crateToMove = input.stacks[move.from-1].pop()
+                cratesToMove.unshift(crateToMove)
+            }
+            // @ts-ignore
+            input.stacks[move.to-1] = input.stacks[move.to-1].concat(cratesToMove)
+        })
+
+
+        return getStackLetters(input.stacks)
     };
 
 
