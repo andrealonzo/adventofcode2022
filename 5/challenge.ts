@@ -1,5 +1,26 @@
-export const createCalculator = (input: string): any => {
-    const parseInput = (input: string): any => {
+interface Move {
+    amount: number,
+    from: number,
+    to: number
+}
+
+interface Input {
+    moves: Move[],
+    stacks: string[][]
+}
+
+export const createCalculator = (inputStr: string): any => {
+
+    const parseInput = (inputStr: string): any => {
+        const input = {
+            moves: parseMoveInput(inputStr),
+            stacks: parseStackInput(inputStr)
+        }
+        return input
+
+    }
+
+    const parseMoveInput = (input: string): any => {
         const movesInput = input.split(/\n\n/)
         const movesStr = movesInput[1].split(/\n/)
         const moves = movesStr.map((moveStr) => {
@@ -13,29 +34,52 @@ export const createCalculator = (input: string): any => {
         })
         return moves
     }
-    const parseStackInput = (input: string): any => {
+    const parseStackInput = (input: string): string[][] => {
         const stacksInput = input.split(/\n\n/)
         const stacksStr = stacksInput[0].split(/\n/)
-
-        console.log("stacksStr", stacksStr)
-        const stackNumbers = stacksStr.pop()
-        console.log("stackNumbers", stackNumbers)
+        const stackNumbers = stacksStr.pop() || ""
         const splitStackNumbers = stackNumbers.trim().split(/\s+/)
         const numStacks = splitStackNumbers.length
 
-        console.log("splitStackNumbers", splitStackNumbers)
+        const stacks: any[] = [];
+        for (let i = 0; i < numStacks; i++) {
+            stacks[i] = []
+        }
 
-
-        let stacks = []
-        stacks[0] = [stacksStr[0].charAt(1)]
-        stacks[1] = [stacksStr[0].charAt(5)]
-        stacks[2] = [stacksStr[0].charAt(9)]
-
+        for (let i = 0; i < stacksStr.length; i++) {
+            for (let j = 0; j < numStacks; j++) {
+                const char = stacksStr[i].charAt((j * 4) + 1)
+                if (char !== " ") {
+                    stacks[j].unshift(char)
+                }
+            }
+        }
         return stacks
     }
 
+    function getStackLetters(stacks: string[][]) {
+        return stacks.map((stack) => stack[stack.length - 1]).join("")
+    }
 
     const calculateAnswer1 = () => {
+        const input:Input = parseInput(inputStr)
+
+        console.log("stacks before", input.stacks)
+        input.moves.forEach((move)=>{
+            console.log("move",move)
+            for (let i = 0; i < move.amount; i++) {
+                const crateToMove = input.stacks[move.from-1].pop()
+                if(crateToMove){
+                    input.stacks[move.to-1].push(crateToMove)
+                }
+
+            }
+        })
+
+        console.log("stacks after", input.stacks)
+
+        const stackLetters = getStackLetters(input.stacks);
+        return stackLetters
     };
 
 
@@ -46,7 +90,7 @@ export const createCalculator = (input: string): any => {
     return {
         calculateAnswer1: calculateAnswer1,
         calculateAnswer2: calculateAnswer2,
-        parseInput,
+        parseMoveInput,
         parseStackInput
     }
 
