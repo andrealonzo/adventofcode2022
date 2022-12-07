@@ -89,7 +89,25 @@ export const createCalculator = (input: string): any => {
     };
 
 
+    function findSmallestDirectorySizeToDelete(directorySizes: number[]) {
+        const totalDiskAvailable = 70000000
+        const spaceNeeded = 30000000
+        const sortedSizes = directorySizes.sort((a,b)=>a-b)
+        const curTotalSpace = sortedSizes.reduce((prev,cur)=>{
+            if(prev>cur)
+                return prev
+            return cur
+        })
+        const unusedSpace = totalDiskAvailable - curTotalSpace
+        const requiredDirectorySize =spaceNeeded - unusedSpace
+         const possibleCandidates = sortedSizes.filter((size)=>size > requiredDirectorySize)
+        return possibleCandidates[0]
+    }
+
     const calculateAnswer2 = () => {
+        const directorySizes = getDirectorySizes()
+            .map((directorySize)=>directorySize.size)
+        return findSmallestDirectorySizeToDelete(directorySizes)
     };
     const printTree = () => {
         return treeToString(rootDirectory, "")
@@ -100,16 +118,12 @@ export const createCalculator = (input: string): any => {
     //@ts-ignore
     const getDirectorySize = (directory):number => {
         let directorySize = 0
-        console.log("calculating directory size for ", directory.name, directorySize)
-        console.log("directory files for ", directory.name, directory.contents.files)
         for (let i = 0; i < directory.contents.files.length; i++) {
             directorySize +=  directory.contents.files[i].size
         }
-        console.log("after files calculating directory size for ", directory.name, directorySize)
         for (let i = 0; i < directory.contents.directories.length; i++) {
             directorySize += getDirectorySize(directory.contents.directories[i])
         }
-        console.log("directory size", directory.name, directorySize)
         directorySizes.push({
             name:directory.name,
             size:directorySize
@@ -118,7 +132,6 @@ export const createCalculator = (input: string): any => {
 
     }
     const getDirectorySizes = () =>{
-        console.log(printTree())
         getDirectorySize(rootDirectory)
         //@ts-ignore
         return directorySizes
