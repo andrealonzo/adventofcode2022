@@ -98,24 +98,18 @@ export const createCalculator = (input: string): any => {
 
     const calculateAnswer2 = () => {
         const directorySizes = getDirectorySizes()
-            .map((directorySize) => directorySize.size)
         return findSmallestDirectorySizeToDelete(directorySizes)
     };
     const printTree = () => {
         return treeToString(rootDirectory, "")
     }
 
-    //@ts-ignore
-    let directorySizes = []
-    //@ts-ignore
-    const getDirectorySize = (directory): number => {
-        const fileSizes = directory.contents.files.reduce((prevSum, curFile) => prevSum + curFile.size, 0)
-        const childDirectorySizes = directory.contents.directories.reduce((prevSum, curDirectory) => prevSum + getDirectorySize(curDirectory), 0)
+    let directorySizes: number[]= []
+    const getDirectorySize = (directory:Directory): number => {
+        const fileSizes = directory.contents.files.reduce((prevSum:number, curFile:DirectoryFile) => prevSum + curFile.size, 0)
+        const childDirectorySizes = directory.contents.directories.reduce((prevSum:number, curDirectory:Directory) => prevSum + getDirectorySize(curDirectory), 0)
         const directorySize = fileSizes + childDirectorySizes
-        directorySizes.push({
-            name: directory.name,
-            size: directorySize
-        })
+        directorySizes.push(directorySize)
         return directorySize
 
     }
@@ -129,7 +123,6 @@ export const createCalculator = (input: string): any => {
     const totalSizeOfDirectoriesAtMost = (num: number) => {
         const directorySizes = getDirectorySizes()
         return directorySizes
-            .map((directorySize) => directorySize.size)
             .filter((directorySize) => directorySize <= num)
             .reduce((prev, cur) => prev + cur)
     }

@@ -131,20 +131,7 @@ test('get directory sizes small', () => {
         "8504156 c.dat\n" +
         "dir d"
 
-    const expected = [
-        {
-            "name": "a",
-            "size": 0
-        },
-        {
-            "name": "d",
-            "size": 0
-        },
-        {
-            "name": "/",
-            "size": 23352670
-        }
-    ]
+    const expected = [0,0,23352670]
     const calculator = createCalculator(input)
     const actual = calculator.getDirectorySizes()
     expect(actual).toStrictEqual(expected)
@@ -174,24 +161,7 @@ test('get directory sizes full', () => {
         "5626152 d.ext\n" +
         "7214296 k"
 
-    const expected = [
-        {
-            "name": "e",
-            "size": 584
-        },
-        {
-            "name": "a",
-            "size": 94853
-        },
-        {
-            "name": "d",
-            "size": 24933642
-        },
-        {
-            "name": "/",
-            "size": 48381165
-        }
-    ]
+    const expected = [584,94853,24933642,48381165]
     const calculator = createCalculator(input)
     const actual = calculator.getDirectorySizes()
     expect(actual).toStrictEqual(expected)
