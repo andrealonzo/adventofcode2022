@@ -9,27 +9,11 @@ export const createCalculator = (input: string): any => {
 
     function isVisible(grid: number[][], i: number, j: number) {
         const targetTreeHeight = grid[i][j]
-        const heightsOfLeftTrees: number[] = []
-        const heightsOfRightTrees: number[] = []
-        const heightsOfTopTrees: number[] = []
-        const heightsOfBottomTrees: number[] = []
-        for (let k = 0; k < j; k++) {
-            heightsOfLeftTrees.push(grid[i][k])
-        }
-        for (let k = j + 1; k < grid.length; k++) {
-            heightsOfRightTrees.push(grid[i][k])
-        }
-        for (let k = 0; k < i; k++) {
-            heightsOfTopTrees.push(grid[k][j])
-        }
-        for (let k = i + 1; k < grid.length; k++) {
-            heightsOfBottomTrees.push(grid[k][j])
-        }
-        const maxHeightLeftTrees = heightsOfLeftTrees.reduce(maxHeightFn)
 
-        const maxHeightRightTrees = heightsOfRightTrees.reduce(maxHeightFn)
-        const maxHeightTopTrees = heightsOfTopTrees.reduce(maxHeightFn)
-        const maxHeightBottomTrees = heightsOfBottomTrees.reduce(maxHeightFn)
+        const maxHeightLeftTrees = grid[i].slice(0, j).reduce(maxHeightFn)
+        const maxHeightRightTrees = grid[i].slice(j+1, grid.length).reduce(maxHeightFn)
+        const maxHeightTopTrees = grid.map((row)=>row[j]).slice(0,i).reduce(maxHeightFn)
+        const maxHeightBottomTrees = grid.map((row)=>row[j]).slice(i+1,grid.length).reduce(maxHeightFn)
 
         return targetTreeHeight > maxHeightLeftTrees
             || targetTreeHeight > maxHeightRightTrees
