@@ -2,4 +2,4 @@
 npm install  
 
 **How to run the program**  
-npm run answer
+npm run answer <day>

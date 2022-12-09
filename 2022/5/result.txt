@@ -1,4 +1,0 @@
-
-> answer
-> ts-node index.ts
-

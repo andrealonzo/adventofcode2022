@@ -1,7 +1,8 @@
 interface Challenge {
-    calculate: () => number;
-
-    calculateGroup(): number;
+    calculate: () => number,
+    calculateAnswer1: () => number;
+    calculateAnswer2: () => number;
+    calculateGroup(): number
 }
 
 export const createCalculator = (input: string): Challenge => {
@@ -73,13 +74,22 @@ export const createCalculator = (input: string): Challenge => {
         return sumPriorities
     }
 
+    const calculateAnswer1 = ()=>{
+        return calculate()
+    }
+    const calculateAnswer2 = ()=>{
+        return calculateGroup()
+    }
     const calculateGroup = ()=>{
         return calculateGroupPriorities(rucksacks)
     }
 
+
     return {
         calculate,
-        calculateGroup
+        calculateGroup,
+        calculateAnswer1,
+        calculateAnswer2
     }
 
 }

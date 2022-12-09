@@ -11,7 +11,7 @@ export const createCalculator = (input: string): any => {
         return true;
     }
 
-    function findDistinct(distinctNums) {
+    function findDistinct(distinctNums:number) {
         let index = 0;
         for (let i = distinctNums; i < input.length; i++) {
             if (containsNoRepeats(input.substring(i - distinctNums, i))) {
