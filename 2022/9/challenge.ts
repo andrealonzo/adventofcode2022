@@ -4,13 +4,37 @@ export const createCalculator = (input: string): any => {
     }
 
     const commands = parseInput(input)
-    const start =15
-    let tailVisits: any = {}
+    const start = 20
 
     function calculateNextKnot(tail: { r: number; c: number }, head: { r: number; c: number }) {
-        if (Math.abs(tail.c - head.c) <= 1 && Math.abs(tail.r - head.r) <= 1)
+        const dRow = Math.abs(tail.r - head.r)
+        const dCol = Math.abs(tail.c - head.c)
+        if (dRow <= 1 && dCol <= 1) {
             return tail
-        if (tail.r === head.r) {
+        } else if (dRow >= 2 && dCol >= 2) {
+            if (tail.r < head.r && tail.c < head.c) {
+                return {
+                    r: tail.r + 1,
+                    c: tail.c + 1
+                }
+            } else if (tail.r < head.r && tail.c > head.c) {
+                return {
+                    r: tail.r + 1,
+                    c: tail.c - 1
+                }
+            } else if (tail.r > head.r && tail.c > head.c) {
+                return {
+                    r: tail.r - 1,
+                    c: tail.c - 1
+                }
+            } else if (tail.r > head.r && tail.c < head.c) {
+                return {
+                    r: tail.r - 1,
+                    c: tail.c + 1
+                }
+            }
+
+        } else if (tail.r === head.r) {
             if (tail.c < head.c) {
                 return {
                     r: tail.r,
@@ -34,29 +58,6 @@ export const createCalculator = (input: string): any => {
                     c: tail.c
                 }
             }
-        } else if (Math.abs(head.r - tail.r) == 2 && Math.abs(head.c - tail.c) == 2) {
-            if (tail.r < head.r && tail.c < head.c) {
-                return {
-                    r: tail.r + 1,
-                    c: tail.c + 1
-                }
-            } else if (tail.r < head.r && tail.c > head.c) {
-                return {
-                    r: tail.r + 1,
-                    c: tail.c - 1
-                }
-            } else if (tail.r > head.r && tail.c > head.c) {
-                return {
-                    r: tail.r - 1,
-                    c: tail.c - 1
-                }
-            } else if (tail.r > head.r && tail.c < head.c) {
-                return {
-                    r: tail.r - 1,
-                    c: tail.c + 1
-                }
-            }
-
         } else if ((head.r - tail.r) === 2) {
             return {
                 r: head.r - 1,
@@ -83,7 +84,7 @@ export const createCalculator = (input: string): any => {
         return tail
     }
 
-    function getCharacter(knots: { r: number, c: number }[], i: number, j: number) {
+    function getCharacter(knots: { r: number, c: number }[], i: number, j: number, startij: number) {
         for (let k = 0; k < knots.length; k++) {
             if (knots[k].r == i && knots[k].c == j) {
                 if (k == 0)
@@ -91,17 +92,20 @@ export const createCalculator = (input: string): any => {
                 return k
             }
         }
+        if (startij == i && startij == j) {
+            return "S"
+        }
         return ".";
     }
 
     function printKnots(knots: any) {
         let str = ""
-        for (let i = 0; i < 40; i++) {
+        for (let i = 0; i < start*2; i++) {
             let charStr = ""
-            for (let j = 0; j < 40; j++) {
-                charStr += getCharacter(knots, i, j)
+            for (let j = 0; j < start*2; j++) {
+                charStr += getCharacter(knots, i, j, start)
             }
-            str = charStr + '\n' + str + '\n'
+            str = charStr + '\n' + str
 
         }
         console.log(str)
@@ -109,9 +113,9 @@ export const createCalculator = (input: string): any => {
     }
 
     const calculateTailVisits = (numKnots: number) => {
+
+        let tailVisits: any = {}
         let knots = new Array(numKnots).fill({r: start, c: start});
-        console.log("starting knots", knots)
-        tailVisits[knots[knots.length - 1].r.toString() + "," + knots[knots.length - 1].c.toString()] = 'T'
 
         for (let i = 0; i < commands.length; i++) {
             const direction = commands[i][0]
@@ -139,18 +143,13 @@ export const createCalculator = (input: string): any => {
                     }
                 }
                 for (let k = 0; k < knots.length - 1; k++) {
-                    // console.log("prev knots[k+1], knots[k]",knots[k+1], knots[k])
                     knots[k + 1] = calculateNextKnot(knots[k + 1], knots[k])
-                    //console.log("new knots[k+1]",knots[k+1])
                 }
-                // console.log("knots ending", knots)
-                // printKnots(knots);
                 tailVisits[knots[knots.length - 1].r.toString() + "," + knots[knots.length - 1].c.toString()] = 'T'
             }
             printKnots(knots);
-            // console.log("knots ending after command", knots)
         }
-        console.log("tailVisits", tailVisits)
+
         return Object.keys(tailVisits).length
 
     }
