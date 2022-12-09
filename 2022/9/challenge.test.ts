@@ -15,7 +15,7 @@ test('sample test', () => {
     expect(actual).toBe(expected)
 })
 test('sample test 2 small', () => {
-    const expected = 13
+    const expected = 1
     const input = "R 4\n" +
         "U 4\n" +
         "L 3\n" +
@@ -29,7 +29,7 @@ test('sample test 2 small', () => {
     expect(actual).toBe(expected)
 })
 test('sample test 2', () => {
-    const expected = 1
+    const expected = 36
     const input = "R 5\n" +
         "U 8\n" +
         "L 8\n" +
