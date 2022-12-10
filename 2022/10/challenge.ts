@@ -6,35 +6,25 @@ export const createCalculator = (input: string): any => {
 
     const commands = parseInput(input)
     const calculateAnswer1 = () => {
+
         let cycle = 1
         let sumSignal = 0
         let register = 1
         for (let i = 0; i < commands.length; i++) {
             const command = commands[i]
-            // console.log("command", command)
-            if (command[0] === "noop") {
-                cycle++
-            } else {
-                cycle++
+            cycle++
+            if (command[0] === "addx") {
                 if ((cycle - 20) % 40 === 0) {
                     sumSignal += cycle * register
-                    // console.log(cycle,register,cycle*register,sumSignal)
                 }
                 cycle++
                 register += parseInt(command[1])
             }
-
             if ((cycle - 20) % 40 === 0) {
                 sumSignal += cycle * register
-                console.log(cycle, register, cycle * register, sumSignal)
             }
-
-            console.log("register", register, "cycle", cycle, "command", command)
-
-
         }
         return sumSignal
-
     };
 
 
