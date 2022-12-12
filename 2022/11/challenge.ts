@@ -48,6 +48,7 @@ export const createCalculator = (input: string): any => {
                 while (monkeys[j].items.length > 0) {
                     monkeyInspections[j]++
                     let worryLevel = monkeys[j].items.shift()
+                    //@ts-ignore
                     worryLevel = monkeys[j].operation(worryLevel)
                     worryLevel = manageWorryLevel(worryLevel)
                     if (worryLevel % monkeys[j].divisibleBy === 0) {
