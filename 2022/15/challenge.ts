@@ -137,7 +137,7 @@ export const createCalculator = (input: string): any => {
                             c = Math.min((sensorBeacon.sensor.c - c) + sensorBeacon.sensor.c, maxSize)
                         } else {
                             //@ts-ignore
-                            c = c + sensorBeacon.distance - sensorToPointDistance
+                            c += sensorBeacon.distance - sensorToPointDistance
                         }
                     }
                 }
