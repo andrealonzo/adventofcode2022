@@ -145,9 +145,6 @@ export const createCalculator = (input: string): any => {
                     return {r, c}
                 }
             }
-            if (r % 1000 === 0) {
-                console.log("done with", r, "/", maxSize)
-            }
         }
         return {
             r: 0,
