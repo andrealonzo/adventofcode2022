@@ -1,5 +1,9 @@
 import {createCalculator} from './challenge'
-test('sample test', () => {
+test.only('sample test', () => {
+    const set = new Set([[0,1]])
+    // expect(set.has([0,1])).toBeTruthy()
+    expect([0,1] in set).toBeTruthy()
+    // expect(set.has(0)).toBeTruthy()
     const expected = 1
     const input = ">>><<><>><<<>><>>><<<>>><<<><<<>><>><<>>"
     const calculator = createCalculator(input)
