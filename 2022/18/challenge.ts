@@ -1,3 +1,6 @@
+const v8 = require('v8');
+v8.setFlagsFromString('--stack-size=412');
+
 export const createCalculator = (input: string): any => {
     const parseInput = (input: string): any => {
         return input.split('\n')
@@ -6,16 +9,11 @@ export const createCalculator = (input: string): any => {
 
     function exists(cube: number[], cubes: number[][]) {
         let [x, y, z] = cube
-        // console.log("cube", x, y, z)
         for (let [tx, ty, tz] of cubes) {
-
-            // console.log(tx,ty,tz)
             if (x === tx && y === ty && z === tz) {
-                // console.log("true")
                 return true
             }
         }
-        // console.log("false")
         return false;
 
     }
@@ -48,7 +46,7 @@ export const createCalculator = (input: string): any => {
     }
 
 
-    function withinBounds(curCube: number[], bounds) {
+    function withinBounds(curCube: number[]): boolean {
         let [x, y, z] = curCube
         let [bx, by, bz] = bounds
         return (x >= 0 && x < bx) &&
@@ -56,132 +54,72 @@ export const createCalculator = (input: string): any => {
             (z >= 0 && z < bz)
     }
 
-    function surfaceArea(curSurfaceArea: number, curCube: number[], cubes: number[][], curSeenCubes: number[][], bounds: number[]): { sufArea, seenCubes } {
-        let [x, y, z] = curCube
-        console.log(curCube)
-        if (x === 3 && y === 2 && z === 2) {
-            console.log("322 hit")
+    let curSeenCubes: number[][] = []
+    let cubes: number[][] = []
+    let bounds: number[] = []
+    let neighbors: number[][] = []
+    let totalSurfaceArea = 0
+
+    function getOutsideCube(cubes: number[][]) {
+        let max = 0
+        for (const cube of cubes) {
+            let [x, y, z] = cube
+            if (x > max) {
+                max = x
+            }
+            if (y > max) {
+                max = y
+            }
+            if (z > max) {
+                max = z
+            }
         }
-        // let sufArea = 0
 
-        if (exists([x, y, z], curSeenCubes)) {
-            return {sufArea: 0, seenCubes: curSeenCubes}
+        return [max + 1, max + 1, max + 1]
+    }
+
+    function floodFill(cube: number[]) {
+        neighbors.push(cube)
+        while (neighbors.length > 0) {
+            let curCube = neighbors.pop()
+
+            //@ts-ignore
+            let [x, y, z] = curCube
+
+            //if out of bounds
+            //@ts-ignore
+            if (!withinBounds(curCube)) {
+                continue
+            }
+            //if inside lava droplet
+            if (exists([x, y, z], cubes)) {
+                totalSurfaceArea++
+                continue
+            }
+            //if already seen
+            if (exists([x, y, z], curSeenCubes)) {
+                continue
+            }
+            //@ts-ignore
+            curSeenCubes.push(curCube)
+            neighbors.push(
+                [x + 1, y, z],
+                [x - 1, y, z],
+                [x, y + 1, z],
+                [x, y - 1, z],
+                [x, y, z + 1],
+                [x, y, z - 1]
+            )
         }
-        curSeenCubes.push(curCube)
-        if (!withinBounds(curCube, bounds)) {
-            return {sufArea: 0, seenCubes: curSeenCubes}
-        }
-        if (exists([x, y, z], cubes)) {
-            return {sufArea: 1, seenCubes: curSeenCubes}
-        }
-        let output = surfaceArea(curSurfaceArea, [x + 1, y, z], cubes, curSeenCubes, bounds)
-        // curSeenCubes.push(output.seenCubes)
-        curSurfaceArea = curSurfaceArea + output.sufArea
-
-        output = surfaceArea(curSurfaceArea, [x - 1, y, z], cubes, curSeenCubes, bounds)
-        // curSeenCubes.push(output.seenCubes)
-        curSurfaceArea = curSurfaceArea + output.sufArea
-
-        // output = surfaceArea(curSurfaceArea, [x, y + 1, z], cubes, curSeenCubes, bounds)
-        // // curSeenCubes.push(output.seenCubes)
-        // curSurfaceArea = curSurfaceArea + output.sufArea
-        //
-        // output = surfaceArea(curSurfaceArea, [x, y - 1, z], cubes, curSeenCubes, bounds)
-        // // curSeenCubes.push(output.seenCubes)
-        // curSurfaceArea = curSurfaceArea + output.sufArea
-        //
-        // output = surfaceArea(curSurfaceArea, [x, y, z + 1], cubes, curSeenCubes, bounds)
-        // // curSeenCubes.push(output.seenCubes)
-        // curSurfaceArea = curSurfaceArea + output.sufArea
-        //
-        // output = surfaceArea(curSurfaceArea, [x, y, z - 1], cubes, curSeenCubes, bounds)
-        // // curSeenCubes.push(output.seenCubes)
-        // curSurfaceArea = curSurfaceArea + output.sufArea
-
-
-        // if (exists([x + 1, y, z], cubes)) {
-        //     sufArea++
-        // } else {
-        //
-        //     sufArea += surfaceArea(sufArea, [x + 1, y, z], cubes, curSeenCubes, bounds)
-        //     curSeenCubes.push([x + 1, y, z])
-        // }
-        //
-        // if (exists([x - 1, y, z], cubes)) {
-        //     sufArea++
-        // } else {
-        //     sufArea += surfaceArea(sufArea, [x - 1, y, z], cubes, curSeenCubes, bounds)
-        //     curSeenCubes.push([x - 1, y, z])
-        // }
-        //
-        // if (exists([x, y + 1, z], cubes)) {
-        //     sufArea++
-        // } else {
-        //     sufArea += surfaceArea(sufArea, [x, y + 1, z], cubes, curSeenCubes, bounds)
-        //     curSeenCubes.push([x, y + 1, z])
-        // }
-        //
-        // if (exists([x, y - 1, z], cubes)) {
-        //     sufArea++
-        // } else {
-        //     sufArea += surfaceArea(sufArea, [x, y - 1, z], cubes, curSeenCubes, bounds)
-        //     curSeenCubes.push([x, y - 1, z])
-        // }
-        //
-        //
-        // if (exists([x, y, z + 1], cubes)) {
-        //     sufArea++
-        // } else {
-        //     sufArea += surfaceArea(sufArea, [x, y, z + 1], cubes, curSeenCubes, bounds)
-        //     curSeenCubes.push([x, y, z + 1])
-        // }
-        //
-        // if (exists([x, y, z - 1], cubes)) {
-        //     sufArea++
-        // } else {
-        //     sufArea += surfaceArea(sufArea, [x, y, z - 1], cubes, curSeenCubes, bounds)
-        //     curSeenCubes.push([x, y, z - 1])
-        // }
-        // if(exists([x + 1, y, z], cubes)){
-        //     sufArea++
-        // }else{
-        //     sufArea += surfaceArea(sufArea, [x - 1, y, z], cubes, seenCubes, bounds)
-        // }
-        return {sufArea: curSurfaceArea, seenCubes: curSeenCubes}
-        // if (!exists([x + 1, y, z], seenCubes)) {
-        //     seenCubes.push([x + 1, y, z])
-        //     sufArea += surfaceArea([x + 1, y, z], cubes, seenCubes, bounds)
-        // }
-        // if (!exists([x - 1, y, z], cubes)) {
-        //     sufArea++
-        // }
-        // if (!exists([x, y + 1, z], cubes)) {
-        //     sufArea++hh
-        // }
-        // if (!exists([x, y - 1, z], cubes)) {
-        //     sufArea++
-        // }
-        // if (!exists([x, y, z + 1], cubes)) {
-        //     sufArea++
-        // }
-        // if (!exists([x, y, z - 1], cubes)) {
-        //     sufArea++
-        // }
-
     }
 
     const calculateAnswer2 = () => {
-        const cubes: number[][] = parseInput(input)
-        const outsideCube: number[] = [8, 2, 2]
-        const bound = 10
-        const bounds = [bound, bound, bound]
-        const seenCubes: number[][] = []
-        let numSurfaceArea = 0
-        let output = surfaceArea(numSurfaceArea, outsideCube, cubes, seenCubes, bounds)
-        console.log("total", output.sufArea)
-
-        return 58
-
+        cubes = parseInput(input)
+        const outsideCube: number[] = getOutsideCube(cubes)
+        const bound = outsideCube[0] + 2
+        bounds = [bound, bound, bound]
+        floodFill(outsideCube)
+        return totalSurfaceArea
     };
 
 

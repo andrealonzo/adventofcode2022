@@ -40,4 +40,12 @@ test('sample test 2', () => {
     expect(actual).toBe(expected)
 })
 
+test('sample test 2 small', () => {
+    const expected = 6
+    const input = "1,1,1"
+    const calculator = createCalculator(input)
+    const actual = calculator.calculateAnswer2();
+    expect(actual).toBe(expected)
+})
+
 
