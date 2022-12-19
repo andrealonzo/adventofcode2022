@@ -15,7 +15,6 @@ export const createCalculator = (input: string): any => {
             }
         }
         return false;
-
     }
 
     const calculateAnswer1 = () => {
@@ -45,20 +44,15 @@ export const createCalculator = (input: string): any => {
         return sufArea
     }
 
-
-    function withinBounds(curCube: number[]): boolean {
+    function withinBounds(curCube: number[], maxBounds: number[], minBounds: number[]): boolean {
         let [x, y, z] = curCube
-        let [bx, by, bz] = bounds
-        return (x >= 0 && x < bx) &&
-            (y >= 0 && y < by) &&
-            (z >= 0 && z < bz)
+        let [bx, by, bz] = maxBounds
+        let [minx, miny, minz] = minBounds
+        return (x >= minx && x < bx) &&
+            (y >= miny && y < by) &&
+            (z >= minz && z < bz)
     }
 
-    let curSeenCubes: number[][] = []
-    let cubes: number[][] = []
-    let bounds: number[] = []
-    let neighbors: number[][] = []
-    let totalSurfaceArea = 0
 
     function getOutsideCube(cubes: number[][]) {
         let max = 0
@@ -74,11 +68,13 @@ export const createCalculator = (input: string): any => {
                 max = z
             }
         }
-
         return [max + 1, max + 1, max + 1]
     }
 
-    function floodFill(cube: number[]) {
+    function outsideSurfaceArea(cube: number[], cubes: number[][], maxBounds: number[], minBounds: number[]) {
+        let totalSurfaceArea = 0
+        let curSeenCubes: number[][] = []
+        let neighbors: number[][] = []
         neighbors.push(cube)
         while (neighbors.length > 0) {
             let curCube = neighbors.pop()
@@ -88,7 +84,7 @@ export const createCalculator = (input: string): any => {
 
             //if out of bounds
             //@ts-ignore
-            if (!withinBounds(curCube)) {
+            if (!withinBounds(curCube, maxBounds, minBounds)) {
                 continue
             }
             //if inside lava droplet
@@ -111,17 +107,35 @@ export const createCalculator = (input: string): any => {
                 [x, y, z - 1]
             )
         }
+        return totalSurfaceArea
+    }
+
+    function getMin(cubes: number[][]) {
+        let min = 0
+        for (const cube of cubes) {
+            let [x, y, z] = cube
+            if (x < min) {
+                min = x
+            }
+            if (y < min) {
+                min = y
+            }
+            if (z < min) {
+                min = z
+            }
+        }
+        return min
     }
 
     const calculateAnswer2 = () => {
-        cubes = parseInput(input)
-        const outsideCube: number[] = getOutsideCube(cubes)
-        const bound = outsideCube[0] + 2
-        bounds = [bound, bound, bound]
-        floodFill(outsideCube)
-        return totalSurfaceArea
+        const cubes = parseInput(input)
+        const startingCube: number[] = getOutsideCube(cubes)
+        const maxBound = startingCube[0] + 1
+        const maxBounds = [maxBound, maxBound, maxBound]
+        const minBound = getMin(cubes) - 1
+        const minBounds = [minBound, minBound, minBound]
+        return outsideSurfaceArea(startingCube, cubes, maxBounds, minBounds)
     };
-
 
     return {
         calculateAnswer1: calculateAnswer1,
