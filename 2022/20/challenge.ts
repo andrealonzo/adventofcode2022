@@ -120,40 +120,31 @@ export const createCalculator = (input: string): any => {
                 let prevNode = nodeToSwap.prev
                 let nextNode = nodeToSwap.next
                 let curNode = nodeToSwap
-                if(nodeToSwap.num !==0){
-                    nextNode.prev = prevNode
-                    prevNode.next = nextNode
+                if (nodeToSwap.num === 0 || nodeToSwap.num % (mixOrder.length - 1) === 0) {
+                    continue
                 }
+                nextNode.prev = prevNode
+                prevNode.next = nextNode
                 if (nodeToSwap.num > 0) {
-                    curNode = nodeArr[nodeToSwap.num % (nodeArr.length - 1)]
+                    for (let i = 0; i < nodeToSwap.num % (mixOrder.length - 1); i++) {
+                        curNode = curNode.next
+                    }
                 } else if (nodeToSwap.num < 0) {
-                    curNode = nodeArr[nodeArr.length - Math.abs(nodeToSwap.num % (nodeArr.length - 1)) -1]
+                    for (let i = 0; i < nodeToSwap.num % (mixOrder.length - 1); i++) {
+                        curNode = curNode.next
+                    }
+                    curNode = nodeArr[nodeArr.length - Math.abs(nodeToSwap.num % (nodeArr.length - 1)) - 1]
                 }
-                if(nodeToSwap.num !==0){
-                    curNode.next.prev = nodeToSwap
-                    nodeToSwap.prev = curNode
-                    nodeToSwap.next = curNode.next
-                    curNode.next = nodeToSwap
-                }
-                const numArr: number[] = convertToArray(head, nums.length)
-                // console.log("nodeToSwap", nodeToSwap)
-                // console.log("nodeToSwap num mod 6", nodeToSwap.num, nodeToSwap.num % 6)
-                // console.log("numArr", numArr)
-                // console.log("curNode", nodeToSwap)
+                curNode.next.prev = nodeToSwap
+                nodeToSwap.prev = curNode
+                nodeToSwap.next = curNode.next
+                curNode.next = nodeToSwap
 
             }
-            const numArr: number[] = convertToArray(head, nums.length)
-            console.log("numArr after round ",i + 1, numArr)
 
         }
         const numArr: number[] = convertToArray(head, nums.length)
-
-
-        console.log("numArr", numArr)
         const answer = numArr[(numArr.indexOf(0) + 1000) % numArr.length] + numArr[(numArr.indexOf(0) + 2000) % numArr.length] + numArr[(numArr.indexOf(0) + 3000) % numArr.length]
-
-        console.log("answer", answer)
-        console.log(nums)
         return answer
     };
 
