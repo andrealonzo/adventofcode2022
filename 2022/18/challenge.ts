@@ -1,6 +1,3 @@
-const v8 = require('v8');
-v8.setFlagsFromString('--stack-size=412');
-
 export const createCalculator = (input: string): any => {
     const parseInput = (input: string): any => {
         return input.split('\n')
@@ -78,12 +75,9 @@ export const createCalculator = (input: string): any => {
         neighbors.push(cube)
         while (neighbors.length > 0) {
             let curCube = neighbors.pop()
-
-            //@ts-ignore
             let [x, y, z] = curCube
 
             //if out of bounds
-            //@ts-ignore
             if (!withinBounds(curCube, maxBounds, minBounds)) {
                 continue
             }
@@ -96,7 +90,7 @@ export const createCalculator = (input: string): any => {
             if (exists([x, y, z], curSeenCubes)) {
                 continue
             }
-            //@ts-ignore
+
             curSeenCubes.push(curCube)
             neighbors.push(
                 [x + 1, y, z],
