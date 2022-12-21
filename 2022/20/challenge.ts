@@ -50,102 +50,52 @@ export const createCalculator = (input: string): any => {
         return mixOrder
     }
 
+    function getAnswer(head: Node, nums: number[]) {
+        const numArr: number[] = convertToArray(head, nums.length)
+        return numArr[(numArr.indexOf(0) + 1000) % numArr.length] + numArr[(numArr.indexOf(0) + 2000) % numArr.length] + numArr[(numArr.indexOf(0) + 3000) % numArr.length]
+    }
+
+    const mix = (nodes: Node[]) => {
+        for (let j = 0; j < nodes.length; j++) {
+            const nodeToMix = nodes[j]
+            if (nodeToMix.num === 0 || nodeToMix.num % (nodes.length - 1) === 0) {
+                continue
+            }
+            let curNode = nodeToMix
+            nodeToMix.next.prev = nodeToMix.prev
+            nodeToMix.prev.next = nodeToMix.next
+            let move;
+            if (nodeToMix.num > 0) {
+                move = nodeToMix.num % (nodes.length - 1)
+            } else if (nodeToMix.num < 0) {
+                move = nodes.length - Math.abs(nodeToMix.num % (nodes.length - 1) - 1)
+            }
+            for (let i = 0; i < move; i++) {
+                curNode = curNode.next
+            }
+            curNode.next.prev = nodeToMix
+            nodeToMix.prev = curNode
+            nodeToMix.next = curNode.next
+            curNode.next = nodeToMix
+        }
+
+    }
     const calculateAnswer1 = () => {
         const nums = parseInput(input)
         const head: Node = convertToLinkedList(nums)
-        let cur = head
-        for (let i = 0; i < nums.length; i++) {
-            cur = cur.next
-        }
-        let mixOrder: Node[] = convertToNodeArray(head, nums.length)
-        // console.log("stack",stack)
-
-        while (mixOrder.length > 0) {
-            let nodeToSwap = mixOrder.shift()
-            // console.log("node to swap", nodeToSwap)
-
-            if (nodeToSwap.num > 0) {
-                let prevNode = nodeToSwap.prev
-                let nextNode = nodeToSwap.next
-                nextNode.prev = prevNode
-                prevNode.next = nextNode
-                let curNode = nodeToSwap
-                for (let i = 0; i < nodeToSwap.num; i++) {
-                    curNode = curNode.next
-                }
-                curNode.next.prev = nodeToSwap
-                nodeToSwap.prev = curNode
-                nodeToSwap.next = curNode.next
-                curNode.next = nodeToSwap
-            } else if (nodeToSwap.num < 0) {
-                let prevNode = nodeToSwap.prev
-                let nextNode = nodeToSwap.next
-                nextNode.prev = prevNode
-                prevNode.next = nextNode
-                let curNode = nodeToSwap
-                for (let i = 0; i < Math.abs(nodeToSwap.num) + 1; i++) {
-                    curNode = curNode.prev
-                }
-                curNode.next.prev = nodeToSwap
-                nodeToSwap.prev = curNode
-                nodeToSwap.next = curNode.next
-                //@ts-ignore
-
-                curNode.next = nodeToSwap
-            }
-            const numArr: number[] = convertToArray(head, nums.length)
-            // console.log("numArr", numArr)
-            // console.log("curNode", nodeToSwap)
-        }
-
-
-        const numArr: number[] = convertToArray(head, nums.length)
-        // console.log("numArr", numArr)
-        const answer = numArr[(numArr.indexOf(0) + 1000) % numArr.length] + numArr[(numArr.indexOf(0) + 2000) % numArr.length] + numArr[(numArr.indexOf(0) + 3000) % numArr.length]
-
-        console.log("answer", answer)
-        // console.log(nums)
-        return answer
+        let nodes: Node[] = convertToNodeArray(head, nums.length)
+        mix(nodes)
+        return getAnswer(head, nums);
     };
-
 
     const calculateAnswer2 = () => {
         const nums = parseInput(input).map((num) => num * 811589153)
         const head: Node = convertToLinkedList(nums)
-        let mixOrder: Node[] = convertToNodeArray(head, nums.length)
+        let nodes: Node[] = convertToNodeArray(head, nums.length)
         for (let i = 0; i < 10; i++) {
-            for (let j = 0; j < mixOrder.length; j++) {
-                let nodeToSwap = mixOrder[j]
-                let nodeArr: Node[] = convertToNodeArray(nodeToSwap, nums.length)
-                let prevNode = nodeToSwap.prev
-                let nextNode = nodeToSwap.next
-                let curNode = nodeToSwap
-                if (nodeToSwap.num === 0 || nodeToSwap.num % (mixOrder.length - 1) === 0) {
-                    continue
-                }
-                nextNode.prev = prevNode
-                prevNode.next = nextNode
-                if (nodeToSwap.num > 0) {
-                    for (let i = 0; i < nodeToSwap.num % (mixOrder.length - 1); i++) {
-                        curNode = curNode.next
-                    }
-                } else if (nodeToSwap.num < 0) {
-                    for (let i = 0; i < nodeToSwap.num % (mixOrder.length - 1); i++) {
-                        curNode = curNode.next
-                    }
-                    curNode = nodeArr[nodeArr.length - Math.abs(nodeToSwap.num % (nodeArr.length - 1)) - 1]
-                }
-                curNode.next.prev = nodeToSwap
-                nodeToSwap.prev = curNode
-                nodeToSwap.next = curNode.next
-                curNode.next = nodeToSwap
-
-            }
-
+            mix(nodes)
         }
-        const numArr: number[] = convertToArray(head, nums.length)
-        const answer = numArr[(numArr.indexOf(0) + 1000) % numArr.length] + numArr[(numArr.indexOf(0) + 2000) % numArr.length] + numArr[(numArr.indexOf(0) + 3000) % numArr.length]
-        return answer
+        return getAnswer(head, nums);
     };
 
 
