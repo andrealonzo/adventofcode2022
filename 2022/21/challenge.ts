@@ -1,5 +1,4 @@
 interface Monkey {
-    name: string,
     monkey1?: string,
     operation: string,
     monkey2?: string
@@ -14,7 +13,6 @@ export const createCalculator = (input: string): any => {
             if (monkeyStr.length === 2) {
                 const operation = monkeyStr[1]
                 monkeys.set(name, {
-                    name,
                     operation
                 })
             } else {
@@ -22,7 +20,6 @@ export const createCalculator = (input: string): any => {
                 const operation = monkeyStr[2]
                 const monkey2 = monkeyStr[3]
                 monkeys.set(name, {
-                    name,
                     monkey1,
                     operation,
                     monkey2
